@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>തൊഴിൽകാർഡ് വിവരങ്ങൾ</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card title-card mt-5 bg-primary text-white">
+            <a class="navbar-brand text-white" href="#">തൊഴിൽകാർഡ് - തൃപ്പങ്ങോട്ടൂർ </a>
+        </div>
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <form onsubmit="return jobCard(event)">
+                            <div class="card bg-light p-3">
+                                <div class="form-group">
+                                    <label for="ward">വാർഡ് നമ്പർ</label>
+                                    <input type="number" id="ward" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="jobcard">തൊഴിൽകാർഡ് നമ്പർ</label>
+                                    <input type="number" id="jobcard" class="form-control" required>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-block" type="submit" id="submitBtn">
+                                <span class="text">Submit</span>
+                                <div class="progress loading-bar-container">
+                                    <div class="progress-bar loading-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="externalPage" class="mt-5"></div>
+        <div class="card footer mt-5 bg-danger text-white">
+            <div class="card-body text-center">
+                <span>&copy; <span id="currentYear"></span> Vishnu Narikodan</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+    <script>
+        function jobCard(event) {
+            event.preventDefault();
+            let submitButton = document.getElementById("submitBtn");
+            let loadingBarContainer = submitButton.querySelector(".loading-bar-container");
+            let externalPageContainer = document.getElementById("externalPage");
+            let wardValue = document.getElementById("ward").value;
+            let jobcardValue = document.getElementById("jobcard").value;
+            submitButton.style.display = "none";
+            loadingBarContainer.style.display = "block";
+            if (wardValue < 10) {
+                loadExternalPage(
+                    "https://nregastrep.nic.in/Netnrega/state_html/jcr.aspx?reg_no=KL-02-006-006-00" +
+                        wardValue +
+                        "%2f" +
+                        jobcardValue +
+                        "&state_name=&district_name=&block_name=&panchayat_name=&village_code=1602006006017+++++&fin_year=&panchayat_code=1602006006&Digest=DXLDauVcnWvIAT6moKBidg"
+                );
+            } else {
+                loadExternalPage(
+                    "https://nregastrep.nic.in/Netnrega/state_html/jcr.aspx?reg_no=KL-02-006-006-0" +
+                        wardValue +
+                        "%2f" +
+                        jobcardValue +
+                        "&state_name=&district_name=&block_name=&panchayat_name=&village_code=1602006006017+++++&fin_year=&panchayat_code=1602006006&Digest=DXLDauVcnWvIAT6moKBidg"
+                );
+            }
+            return false;
+        }
+        function loadExternalPage(url) {
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    document.getElementById("externalPage").innerHTML = this.responseText;
+                    document.getElementById("submitBtn").style.display = "block";
+                    document.querySelector(".loading-bar-container").style.display = "none";
+    
+                    // Automatically scroll to the bottom after loading
+                    window.scrollTo(0, document.body.scrollHeight);
+                }
+            };
+            xhttp.open("GET", url, true);
+            xhttp.send();
+        }
+        const currentYear = new Date().getFullYear();
+        document.getElementById("currentYear").textContent = currentYear;
+    </script>
+    
+</body>
+</html>
